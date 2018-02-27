@@ -21,6 +21,10 @@ class Raw {
 
 class Medoo
 {
+    //https://help.aliyun.com/knowledge_detail/52221.html
+    //阿里云数据库保证时效性，强制查询主库
+    const RDS_MASTER = '/*FORCE_MASTER*/';
+
 	public $pdo;
 
 	protected $type;
@@ -38,6 +42,9 @@ class Medoo
 	protected $debug_mode = false;
 
 	protected $guid = 0;
+
+    //是否强制读取主库
+    protected $force_master = false;
 
 	public function __construct($options = null)
 	{
@@ -821,7 +828,7 @@ class Medoo
 				}
 				elseif ($raw = $this->buildRaw($ORDER, $map))
 				{
-					$where_clause .= ' ORDER BY ' . $raw;	
+					$where_clause .= ' ORDER BY ' . $raw;
 				}
 				else
 				{
@@ -839,7 +846,7 @@ class Medoo
 					{
 						$LIMIT = [0, $LIMIT];
 					}
-					
+
 					if (
 						is_array($LIMIT) &&
 						is_numeric($LIMIT[ 0 ]) &&
@@ -1015,7 +1022,14 @@ class Medoo
 			$column = $this->columnPush($columns, $map);
 		}
 
-		return 'SELECT ' . $column . ' FROM ' . $table_query . $this->whereClause($where, $map);
+		$sql = 'SELECT ' . $column . ' FROM ' . $table_query . $this->whereClause($where, $map);
+
+		if ($this->force_master) {
+            $sql = self::RDS_MASTER . $sql;
+            $this->force_master = false;
+        }
+
+		return $sql;
 	}
 
 	protected function columnMap($columns, &$stack)
@@ -1541,4 +1555,10 @@ class Medoo
 
 		return $output;
 	}
+
+	public function forceMaster()
+    {
+        $this->force_master = true;
+        return $this;
+    }
 }
