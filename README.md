@@ -14,7 +14,7 @@ $db = new \Medoo\Medoo([
     'port'          => 3306,
 ]);
 
-$app->forceMaster()->select('test', '*', ['id' => 1]);
+$db->forceMaster()->select('test', '*', ['id' => 1]);
 ```
 
 ## 测试
