@@ -4,7 +4,7 @@
 ##新增语法
 ```php
 //阿里云RDS读写分离下强制主库查询
-$db = new \Medoo\MedooMedoo([
+$db = new \Medoo\Medoo([
     'database_type' => 'mysql',
     'database_name' => 'test',
     'server'        => '127.0.0.1',
