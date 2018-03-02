@@ -1,9 +1,13 @@
 ## 说明
 基于Medoo二次开发的数据库组件，用于支持阿里云的数据库的读写分离设定，支持更多的Raw写法。
 
+## 安装
+```bash
+composer require shijianzhiwai/medoo
+```
+
 ## 新增语法
 ```php
-//阿里云RDS读写分离下强制主库查询
 $db = new \Medoo\Medoo([
     'database_type' => 'mysql',
     'database_name' => 'test',
@@ -14,7 +18,12 @@ $db = new \Medoo\Medoo([
     'port'          => 3306,
 ]);
 
+//阿里云RDS读写分离下强制主库查询
 $db->forceMaster()->select('test', '*', ['id' => 1]);
+
+//新增的RAW写法 select 部分新增自定义select字段部分
+//生成的语句 /*FORCE_MASTER*/SELECT `id` as asName FROM `test` WHERE `id` = 1
+$db->forceMaster()->select('test', \Medoo\Medoo::raw('`id` as asName'),  ['id' => 1]);
 ```
 
 ## 测试

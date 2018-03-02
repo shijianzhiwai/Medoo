@@ -452,6 +452,11 @@ class Medoo
 			return $columns;
 		}
 
+		if($this->isRaw($columns))
+        {
+            return $columns->value;
+        }
+
 		$stack = [];
 
 		if (is_string($columns))
@@ -1165,7 +1170,7 @@ class Medoo
 			return false;
 		}
 
-		if ($columns === '*')
+		if ($columns === '*' || $this->isRaw($columns))
 		{
 			return $query->fetchAll(PDO::FETCH_ASSOC);
 		}
