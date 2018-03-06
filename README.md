@@ -3,7 +3,7 @@
 
 ## 安装
 ```bash
-composer require shijianzhiwai/medoo
+composer require shijianzhiwai/medoo:1.5.4a
 ```
 
 ## 新增语法
